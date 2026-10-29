@@ -5,6 +5,8 @@ public class Main {
     static Personaje luigi = new Personaje("Luigi", 1, 100, 10, 10, 70, 20);
     static Personaje[] listaPersonajes = {mario, luigi};
     static Personaje elegido;
+    static Personaje oponente = new Personaje("Bowser", 10, 100, 20, 20, 20, 15);
+    static int puntuacion;
 
     public static void main (String[] args) {
         menuPrincipal();
@@ -18,7 +20,7 @@ public class Main {
     }
 
     public static void menuPrincipal() {
-        System.out.println("[[EL DESPERTAR DEL HEROE]] \s");
+        System.out.println("\n" + "[[EL DESPERTAR DEL HEROE]]" + "\n");
         System.out.println("[1] Nueva Partida");
         System.out.println("[2] Consultar Ranking");
         System.out.println("[3] Ayuda y Reglas");
@@ -47,10 +49,10 @@ public class Main {
     }
 
     public static void menuJuego() {
-        System.out.println("[[SELECCIONA PERSONAJE]] \s");
+        System.out.println("\n" + "[[SELECCIONA PERSONAJE]]");
 
         for (int i = 0; i < listaPersonajes.length; i++) {
-            System.out.println("[" + (i + 1) + "] Disponible: " + listaPersonajes[i].getNombre());
+            System.out.println("\n" + "[" + (i + 1) + "] Disponible: " + listaPersonajes[i].getNombre());
             listaPersonajes[i].getStats();
         }
 
@@ -68,10 +70,24 @@ public class Main {
                 elegido = listaPersonajes[selectMenu - 1];
         
                 System.out.println("Has seleccionado a " + elegido.getNombre());
+                empezarCombate();
             } 
             // 3. Opción fuera de rango
             else {
                 System.out.println("No has escogido una opción válida.");
                 }
+    }
+
+    public static void empezarCombate(){
+        System.out.println(elegido.getNombre() + " VS " + "Bowser");
+
+        //LOGICA TURNO
+        if (elegido.getVelocidad() > oponente.getVelocidad()) {
+            System.out.println("Empieza " + elegido.getNombre());
+        }
+
+        else {
+            System.out.println("Empieza " + oponente.getNombre());
+        }
     }
 }
