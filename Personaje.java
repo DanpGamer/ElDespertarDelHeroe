@@ -101,7 +101,8 @@ public class Personaje {
     public int calcularDano() {
         int min = this.poder;
         int max = this.poder * 2; 
-        int danoBase = (int) (Math.random() * (max - min + 1)) + min;        
+        int danoBase = (int) (Math.random() * (max - min + 1)) + min;  
+        int danoFinal = danoBase;      
 
         // 2. Comprobar crítico según la suerte (porcentaje)
         // Generamos un número de 1 a 100
@@ -109,8 +110,6 @@ public class Personaje {
 
         // Si la tirada es menor o igual a la suerte, es un golpe crítico
         boolean esCritico = tiradaPorcentaje <= this.suerte;
-
-        int danoFinal = danoBase;
 
         if (esCritico) {
             // Ejemplo: El crítico aumenta el daño un 50% (1.5x)
