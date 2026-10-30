@@ -88,19 +88,17 @@ public class Personaje {
     }
 
     public void getStats() {
-    System.out.println("=== ESTADISTICAS DE " + this.nombre.toUpperCase() + " ===");
     System.out.println("Nivel: " + this.nivel);
     System.out.println("Vida: " + this.vida + "/" + this.vidaMax);
     System.out.println("Poder: " + this.poder);
     System.out.println("Defensa: " + this.defensa);
     System.out.println("Suerte: " + this.suerte);
     System.out.println("Velocidad: " + this.velocidad);
-    System.out.println("=================================");
     }
 
     public int calcularDano() {
         int min = this.poder;
-        int max = this.poder * 2; 
+        int max = this.poder /* * 2 */; 
         int danoBase = (int) (Math.random() * (max - min + 1)) + min;  
         int danoFinal = danoBase;      
 
@@ -117,7 +115,7 @@ public class Personaje {
             System.out.println("¡GOLPE CRITICO! (" + this.suerte + "% de prob.)");
         }
 
-        System.out.println(this.nombre + " inflige " + danoFinal + " de daño. (Daño base: " + danoBase + ")");
+        System.out.println("\n"+ this.nombre + " inflige " + danoFinal + " de daño. (Daño base: " + danoBase + ")");
 
         return danoFinal;
     }
