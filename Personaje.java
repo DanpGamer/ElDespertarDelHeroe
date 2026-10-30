@@ -119,4 +119,8 @@ public class Personaje {
 
         return danoFinal;
     }
+
+    public void reestablecer() {
+        this.vida = this.vidaMax;
+    }
 }

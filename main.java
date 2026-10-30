@@ -173,8 +173,12 @@ public class Main {
     }
 
     public static void victoria() {
-        System.out.println("¡Has ganado!");
         puntuacion = puntuacion + 100;
+        turno = 0;
+        jugador.reestablecer();
+        oponente.reestablecer();
+        
+        System.out.println("¡Has ganado!");
 
         System.out.println("Puntuacion: " + puntuacion);
 
