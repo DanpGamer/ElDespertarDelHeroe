@@ -22,62 +22,70 @@ public class Main {
     }
 
     public static void menuPrincipal() {
-        System.out.println("\n" + "[[EL DESPERTAR DEL HEROE]]" + "\n");
-        System.out.println("[1] Nueva Partida");
-        System.out.println("[2] Consultar Ranking");
-        System.out.println("[3] Ayuda y Reglas");
-        System.out.println("[0] Salir");
+        int selectMenu;
 
-        int selectMenu = seleccionar();
+        do {
+            System.out.println("\n" + "[[EL DESPERTAR DEL HEROE]]" + "\n");
+            System.out.println("[1] Nueva Partida");
+            System.out.println("[2] Consultar Ranking");
+            System.out.println("[3] Ayuda y Reglas");
+            System.out.println("[0] Salir");
 
-        switch (selectMenu) {
-            case 1:
-                menuJuego();
-                break;
-            case 2:
-                
-                break;
-            case 3:
-                
-                break;
-            case 0:
-                
-                break;
-        
-            default:
-                System.out.println("No has escogido una opcion valida");
-                break;
-        }
+            selectMenu = seleccionar();
+
+            switch (selectMenu) {
+                case 1:
+                    menuJuego();
+                    break;
+                case 2:
+                    
+                    break;
+                case 3:
+                    
+                    break;
+                case 0:
+                    
+                    break;
+            
+                default:
+                    System.out.println("No has escogido una opcion valida");
+                    break;
+            }
+        } while (selectMenu < 0 || selectMenu > 3);
     }
 
     public static void menuJuego() {
-        System.out.println("\n" + "[[SELECCIONA PERSONAJE]]");
+        int selectMenu;
 
-        for (int i = 0; i < listaPersonajes.length; i++) {
-            System.out.println("\n" + "[" + (i + 1) + "] " + listaPersonajes[i].getNombre());
-            listaPersonajes[i].getStats();
-        }
+        do {
+            System.out.println("\n" + "[[SELECCIONA PERSONAJE]]");
 
-        System.out.println("[0] Volver");
+            for (int i = 0; i < listaPersonajes.length; i++) {
+                System.out.println("\n" + "[" + (i + 1) + "] " + listaPersonajes[i].getNombre());
+                listaPersonajes[i].getStats();
+            }
 
-        int selectMenu = seleccionar();
+            System.out.println("[0] Volver");
 
-        if (selectMenu == 0) {
-        menuPrincipal();
-        } 
-            // 2. Validación dinámica: ¿La opción está entre 1 y la cantidad total de personajes?
-            else if (selectMenu >= 1 && selectMenu <= listaPersonajes.length) {
-        
-                // Obtenemos el personaje seleccionado (opcion - 1 nos da el índice exacto en el array)
-                jugador = listaPersonajes[selectMenu - 1];
-        
-                System.out.println("Has seleccionado a " + jugador.getNombre());
-                empezarCombate();
+            selectMenu = seleccionar();
+
+            if (selectMenu == 0) {
+            menuPrincipal();
             } 
-            // 3. Opción fuera de rango
-            else {
-                System.out.println("No has escogido una opción válida.");
-                }
+                // 2. Validación dinámica: ¿La opción está entre 1 y la cantidad total de personajes?
+                else if (selectMenu >= 1 && selectMenu <= listaPersonajes.length) {
+            
+                    // Obtenemos el personaje seleccionado (opcion - 1 nos da el índice exacto en el array)
+                    jugador = listaPersonajes[selectMenu - 1];
+            
+                    System.out.println("Has seleccionado a " + jugador.getNombre());
+                    empezarCombate();
+                } 
+                // 3. Opción fuera de rango
+                else {
+                    System.out.println("No has escogido una opción válida.");
+                    }
+        } while (selectMenu < 0 || selectMenu > listaPersonajes.length);
     }
 
     public static void empezarCombate(){
@@ -148,10 +156,13 @@ public class Main {
     }
 
     public static void turnoJugador(){
-        System.out.println("[TURNO " + turno + ": " + jugador.getNombre() +"]");
+        int selectMenu;
+        do {
+            System.out.println("[TURNO " + turno + ": " + jugador.getNombre() +"]");
 
-        System.out.println("[1] ATAQUE DE SALTO");
-        int selectMenu = seleccionar();
+            System.out.println("[1] ATAQUE DE SALTO");
+            selectMenu = seleccionar();
+        } while (selectMenu < 0 || selectMenu > 1); 
 
         if (selectMenu == 1) {
             System.out.println("Has seleccionado ATAQUE DE SALTO");
