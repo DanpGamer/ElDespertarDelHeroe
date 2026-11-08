@@ -21,6 +21,42 @@ public class Personaje {
         this.velocidad = velocidad;
     }
 
+    public void getStats() {
+    System.out.println("Nivel: " + this.nivel);
+    System.out.println("Vida: " + this.vida + "/" + this.vidaMax);
+    System.out.println("Poder: " + this.poder);
+    System.out.println("Defensa: " + this.defensa);
+    System.out.println("Suerte: " + this.suerte);
+    System.out.println("Velocidad: " + this.velocidad);
+    }
+
+    public int calcularDano() {
+        int min = this.poder;
+        int max = this.poder /* * 2 */; 
+        int danoBase = (int) (Math.random() * (max - min + 1)) + min;  
+        int danoFinal = danoBase;      
+
+        // 2. Comprobar crítico según la suerte (porcentaje)
+        // Generamos un número de 1 a 100
+        int tiradaPorcentaje = (int) (Math.random() * (100 - 1 + 1)) + 1; 
+
+        // Si la tirada es menor o igual a la suerte, es un golpe crítico
+        boolean esCritico = tiradaPorcentaje <= this.suerte;
+
+        if (esCritico) {
+            // Ejemplo: El crítico aumenta el daño un 50% (1.5x)
+            danoFinal = (int) (danoBase * 1.5);
+            System.out.println("¡GOLPE CRITICO! (" + this.suerte + "% de prob.)");
+        }
+
+        System.out.println("\n"+ this.nombre + " inflige " + danoFinal + " de daño. (Daño base: " + danoBase + ")");
+
+        return danoFinal;
+    }
+
+    public void reestablecer() {
+        this.vida = this.vidaMax;
+    }
 
     //SET AND GETTERS
     public String getNombre(){
@@ -85,42 +121,5 @@ public class Personaje {
 
     public void setVelocidad(int velocidad) {
         this.velocidad = velocidad;
-    }
-
-    public void getStats() {
-    System.out.println("Nivel: " + this.nivel);
-    System.out.println("Vida: " + this.vida + "/" + this.vidaMax);
-    System.out.println("Poder: " + this.poder);
-    System.out.println("Defensa: " + this.defensa);
-    System.out.println("Suerte: " + this.suerte);
-    System.out.println("Velocidad: " + this.velocidad);
-    }
-
-    public int calcularDano() {
-        int min = this.poder;
-        int max = this.poder /* * 2 */; 
-        int danoBase = (int) (Math.random() * (max - min + 1)) + min;  
-        int danoFinal = danoBase;      
-
-        // 2. Comprobar crítico según la suerte (porcentaje)
-        // Generamos un número de 1 a 100
-        int tiradaPorcentaje = (int) (Math.random() * (100 - 1 + 1)) + 1; 
-
-        // Si la tirada es menor o igual a la suerte, es un golpe crítico
-        boolean esCritico = tiradaPorcentaje <= this.suerte;
-
-        if (esCritico) {
-            // Ejemplo: El crítico aumenta el daño un 50% (1.5x)
-            danoFinal = (int) (danoBase * 1.5);
-            System.out.println("¡GOLPE CRITICO! (" + this.suerte + "% de prob.)");
-        }
-
-        System.out.println("\n"+ this.nombre + " inflige " + danoFinal + " de daño. (Daño base: " + danoBase + ")");
-
-        return danoFinal;
-    }
-
-    public void reestablecer() {
-        this.vida = this.vidaMax;
     }
 }
