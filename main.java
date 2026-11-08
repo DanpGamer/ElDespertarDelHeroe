@@ -9,6 +9,7 @@ public class Main {
     static Personaje personajeTurno;
     static int turno = 1;
     static int puntuacion;
+    static String[] ranking = new String[10];
 
     public static void main (String[] args) {
         menuPrincipal();
@@ -38,10 +39,10 @@ public class Main {
                     menuJuego();
                     break;
                 case 2:
-                    
+                    consultarRanking();
                     break;
                 case 3:
-                    
+                    ayudaReglas();
                     break;
                 case 0:
                     
@@ -188,7 +189,7 @@ public class Main {
         turno = 0;
         jugador.reestablecer();
         oponente.reestablecer();
-        
+
         System.out.println("¡Has ganado!");
 
         System.out.println("Puntuacion: " + puntuacion);
@@ -209,5 +210,51 @@ public class Main {
             default:
                 break;
         }
+    }
+
+    public static void checkCrit(Personaje Personaje) {
+        int dano = Personaje.getPoder();
+
+        // 2. Comprobar crítico según la suerte (porcentaje)
+        // Generamos un número de 1 a 100
+        int tiradaPorcentaje = (int) (Math.random() * (100 - 1 + 1)) + 1; 
+
+        // Si la tirada es menor o igual a la suerte, es un golpe crítico
+        boolean esCritico = tiradaPorcentaje <= Personaje.getSuerte();
+
+        if (esCritico) {
+            // Ejemplo: El crítico aumenta el daño un 50% (1.5x)
+            dano = (int) (dano * 1.5);
+            System.out.println("¡GOLPE CRITICO! (" + Personaje.getSuerte() + "% de prob.)");
+        }
+    }
+
+    public static void consultarRanking() {
+        int selectMenu;
+
+        do {
+            System.out.println("[[RANKING]]");
+            selectMenu = seleccionar();
+        } while (selectMenu > 0 || selectMenu < 0); 
+
+            
+    }
+
+    public static String guardarPuntuacion(int puntuacion){
+        Scanner nombreSc = new Scanner(System.in);
+        String nombre = nombreSc.nextLine();
+
+        return (nombre + puntuacion);
+        
+    }
+
+    public static void ayudaReglas() {
+        int selectMenu;
+        do {
+            System.out.println("[TURNO " + turno + ": " + jugador.getNombre() +"]");
+
+            System.out.println("[1] ATAQUE DE SALTO");
+            selectMenu = seleccionar();
+        } while (selectMenu < 0 || selectMenu > 1); 
     }
 }
