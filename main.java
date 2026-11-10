@@ -1,15 +1,15 @@
 import java.util.Scanner;
 
 public class Main {
-    static Personaje mario = new Personaje("Mario", 1, 100, 10, 10, 10, 10);
-    static Personaje luigi = new Personaje("Luigi", 1, 100, 10, 10, 70, 20);
+    static Personaje mario = new Personaje("Mario", 1, 100, 10, 10, 10, 10, "fuego");
+    static Personaje luigi = new Personaje("Luigi", 1, 100, 10, 10, 70, 20, "electrica");
     static Personaje[] listaPersonajes = {mario, luigi};
     static Personaje jugador;
-    static Personaje oponente = new Personaje("Bowser", 10, 100, 10, 20, 20, 15);
+    static Personaje oponente = new Personaje("Bowser", 10, 100, 10, 20, 20, 15, "fuego");
     static Personaje personajeTurno;
     static int turno = 1;
     static int puntuacion;
-    static String[] ranking = new String[10];
+    static String[] ranking = new String[5];
 
     public static void main (String[] args) {
         menuPrincipal();
@@ -167,7 +167,7 @@ public class Main {
 
         if (selectMenu == 1) {
             System.out.println("Has seleccionado ATAQUE DE SALTO");
-            int dano = jugador.calcularDano();
+            int dano = jugador.atacar(jugador.ataqueBasico());
             
             // Evitamos que la vida baje de 0
             int nuevaVida = Math.max(0, oponente.getVida() - dano);
@@ -177,7 +177,7 @@ public class Main {
     }
 
     public static void turnoOponente() {
-        int dano = oponente.calcularDano();
+        int dano = oponente.atacar(oponente.ataqueBasico());
 
         // Evitamos que la vida baje de 0
         int nuevaVida = Math.max(0, jugador.getVida() - dano);
@@ -212,29 +212,30 @@ public class Main {
         }
     }
 
-    public static void checkCrit(Personaje Personaje) {
-        int dano = Personaje.getPoder();
-
-        // 2. Comprobar crítico según la suerte (porcentaje)
-        // Generamos un número de 1 a 100
-        int tiradaPorcentaje = (int) (Math.random() * (100 - 1 + 1)) + 1; 
-
-        // Si la tirada es menor o igual a la suerte, es un golpe crítico
-        boolean esCritico = tiradaPorcentaje <= Personaje.getSuerte();
-
-        if (esCritico) {
-            // Ejemplo: El crítico aumenta el daño un 50% (1.5x)
-            dano = (int) (dano * 1.5);
-            System.out.println("¡GOLPE CRITICO! (" + Personaje.getSuerte() + "% de prob.)");
-        }
-    }
-
     public static void consultarRanking() {
         int selectMenu;
 
         do {
             System.out.println("[[RANKING]]");
+
+            for (int i = 0; i < ranking.length; i++) {
+                String rankingGuardado = ranking[i];
+
+                if (rankingGuardado == null) {
+                    rankingGuardado = ("[" + (i + 1) + "] " + "No hay puntuacion guardada");
+                }
+
+                System.out.println(rankingGuardado);
+            }
+
+            System.out.println("\n[0] Volver al Menu Principal");
+
             selectMenu = seleccionar();
+
+            if (selectMenu == 0) {
+                menuPrincipal();
+            }
+
         } while (selectMenu > 0 || selectMenu < 0); 
 
             
@@ -251,9 +252,11 @@ public class Main {
     public static void ayudaReglas() {
         int selectMenu;
         do {
-            System.out.println("[TURNO " + turno + ": " + jugador.getNombre() +"]");
+            System.out.println("REGLAS Y AYUDA");
 
-            System.out.println("[1] ATAQUE DE SALTO");
+            System.out.println();
+
+            System.out.println("[0] Volver al Menu Principal");
             selectMenu = seleccionar();
         } while (selectMenu < 0 || selectMenu > 1); 
     }
