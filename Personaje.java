@@ -9,8 +9,9 @@ public class Personaje {
     private int defensa;
     private int suerte;
     private int velocidad;
+    private String elemento;
 
-    public Personaje(String nombre, int nivel, int vidaMax, int poder, int defensa, int suerte, int velocidad){
+    public Personaje(String nombre, int nivel, int vidaMax, int poder, int defensa, int suerte, int velocidad, String elemento){
         this.nombre = nombre;
         this.nivel = 1;
         this.vidaMax = vidaMax;
@@ -19,6 +20,7 @@ public class Personaje {
         this.defensa = defensa;
         this.suerte = suerte;
         this.velocidad = velocidad;
+        this.elemento = elemento;
     }
 
     public void getStats() {
@@ -30,12 +32,15 @@ public class Personaje {
     System.out.println("Velocidad: " + this.velocidad);
     }
 
-    public int calcularDano() {
+    public int ataqueBasico() {
         int min = this.poder;
         int max = this.poder /* * 2 */; 
         int danoBase = (int) (Math.random() * (max - min + 1)) + min;  
-        int danoFinal = danoBase;      
+        return danoBase;
+    }
 
+    public int atacar(int habilidad) {
+        int danoFinal = habilidad;      
         // 2. Comprobar crítico según la suerte (porcentaje)
         // Generamos un número de 1 a 100
         int tiradaPorcentaje = (int) (Math.random() * (100 - 1 + 1)) + 1; 
@@ -45,20 +50,20 @@ public class Personaje {
 
         if (esCritico) {
             // Ejemplo: El crítico aumenta el daño un 50% (1.5x)
-            danoFinal = (int) (danoBase * 1.5);
-            System.out.println("¡GOLPE CRITICO! (" + this.suerte + "% de prob.)");
+            danoFinal = (int) (habilidad * 1.5);
+            System.out.println("\n"+ this.nombre + " inflige ¡GOLPE CRITICO! " + danoFinal + " de daño. (Daño base: " + habilidad + ")");
+        } else {
+            System.out.println("\n"+ this.nombre + " inflige " + danoFinal + " de daño. (Daño base: " + habilidad + ")");
         }
-
-        System.out.println("\n"+ this.nombre + " inflige " + danoFinal + " de daño. (Daño base: " + danoBase + ")");
-
         return danoFinal;
     }
 
+    //Metodo para reestablecer vida de personaje
     public void reestablecer() {
         this.vida = this.vidaMax;
     }
 
-    //SET AND GETTERS
+    //[[[[[[[[[[[[[[[[SET AND GETTERS]]]]]]]]]]]]]]]]]]
     public String getNombre(){
         return this.nombre;
     }
