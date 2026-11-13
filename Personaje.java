@@ -1,15 +1,16 @@
-import java.util.Random;
+import java.util.Scanner;
 
 public class Personaje {
-    private String nombre;
-    private int nivel;
-    private int vida;
-    private int vidaMax;
-    private int poder;
-    private int defensa;
-    private int suerte;
-    private int velocidad;
-    private String elemento;
+    protected String nombre;
+    protected int nivel;
+    protected int vida;
+    protected int vidaMax;
+    protected int poder;
+    protected int defensa;
+    protected int suerte;
+    protected int velocidad;
+    protected String elemento;
+    protected int [] pociones = new int[5]; 
 
     public Personaje(String nombre, int nivel, int vidaMax, int poder, int defensa, int suerte, int velocidad, String elemento){
         this.nombre = nombre;
@@ -32,15 +33,7 @@ public class Personaje {
     System.out.println("Velocidad: " + this.velocidad);
     }
 
-    public int ataqueBasico() {
-        int min = this.poder;
-        int max = this.poder /* * 2 */; 
-        int danoBase = (int) (Math.random() * (max - min + 1)) + min;  
-        return danoBase;
-    }
-
-    public int atacar(int habilidad) {
-        int danoFinal = habilidad;      
+    public int checkCrit(Personaje atacante, String mensaje) {
         // 2. Comprobar crítico según la suerte (porcentaje)
         // Generamos un número de 1 a 100
         int tiradaPorcentaje = (int) (Math.random() * (100 - 1 + 1)) + 1; 
@@ -48,14 +41,22 @@ public class Personaje {
         // Si la tirada es menor o igual a la suerte, es un golpe crítico
         boolean esCritico = tiradaPorcentaje <= this.suerte;
 
+        int danoFinal = this.poder;
+
         if (esCritico) {
             // Ejemplo: El crítico aumenta el daño un 50% (1.5x)
-            danoFinal = (int) (habilidad * 1.5);
-            System.out.println("\n"+ this.nombre + " inflige ¡GOLPE CRITICO! " + danoFinal + " de daño. (Daño base: " + habilidad + ")");
+            danoFinal = (int) (this.poder * 1.5);
+            System.out.println("\n" + "¡CRITICO! " + mensaje + " " + danoFinal + " de daño. (Daño base: " + this.poder + ")");
+            return danoFinal;
         } else {
-            System.out.println("\n"+ this.nombre + " inflige " + danoFinal + " de daño. (Daño base: " + habilidad + ")");
+            System.out.println("\n"+ mensaje + " " + danoFinal + " de daño. (Daño base: " + this.poder + ")");
+            return danoFinal;
         }
-        return danoFinal;
+    }
+
+    public void ataqueBasico(Personaje oponente) {
+        int danoFinal = checkCrit(this, this.nombre + " inflige");
+        oponente.setVida(Math.max(0, oponente.getVida() - danoFinal));
     }
 
     //Metodo para reestablecer vida de personaje
