@@ -1,12 +1,16 @@
 import java.util.Scanner;
 
 public class Main {
-    static Personaje mario = new Personaje("Mario", 1, 100, 10, 10, 10, 10, "fuego");
-    static Personaje luigi = new Personaje("Luigi", 1, 100, 10, 10, 70, 20, "electrica");
-    static Personaje[] listaPersonajes = {mario, luigi};
-    static Personaje jugador;
+    static Bros[] listaPersonajes = {
+        new Bros("Mario", 1, 100, 15, 10, 10, 15, "fuego"), 
+        new Bros("Luigi", 1, 100, 10, 15, 10, 10, "electrica"),
+        new Bros("Wario", 1, 100, 20, 20, 10, 5, "fuego")
+    };
+    static Bros jugador;
+
     static Personaje oponente = new Personaje("Bowser", 10, 100, 10, 20, 20, 15, "fuego");
     static Personaje personajeTurno;
+
     static int turno = 1;
     static int puntuacion;
     static String[] ranking = new String[5];
@@ -162,26 +166,27 @@ public class Main {
             System.out.println("[TURNO " + turno + ": " + jugador.getNombre() +"]");
 
             System.out.println("[1] ATAQUE DE SALTO");
+            System.out.println("[2] ATAQUE MARTILLO");
+            System.out.println("[3] ATAQUE ELEMENTAL");
             selectMenu = seleccionar();
-        } while (selectMenu < 0 || selectMenu > 1); 
+        } while (selectMenu < 0 || selectMenu > 3); 
 
         if (selectMenu == 1) {
-            System.out.println("Has seleccionado ATAQUE DE SALTO");
-            int dano = jugador.atacar(jugador.ataqueBasico());
-            
-            // Evitamos que la vida baje de 0
-            int nuevaVida = Math.max(0, oponente.getVida() - dano);
-            oponente.setVida(nuevaVida);
+            jugador.ataqueSalto(oponente);
+        }
+
+        if (selectMenu == 2) {
+            jugador.ataqueMartillo(oponente);
+        }
+
+        if (selectMenu == 3) {
+            jugador.ataqueElemental(oponente);
         }
 
     }
 
     public static void turnoOponente() {
-        int dano = oponente.atacar(oponente.ataqueBasico());
-
-        // Evitamos que la vida baje de 0
-        int nuevaVida = Math.max(0, jugador.getVida() - dano);
-        jugador.setVida(nuevaVida);
+        oponente.ataqueBasico(jugador);
     }
 
     public static void victoria() {
@@ -201,7 +206,7 @@ public class Main {
         int selectMenu = seleccionar();
         switch (selectMenu) {
             case 1:
-                
+                empezarCombate();
                 break;
         
             case 0:
