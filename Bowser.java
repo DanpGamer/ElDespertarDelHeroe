@@ -1,4 +1,4 @@
-public class Bowser extends Personaje implements IataqueElemental {
+public class Bowser extends Personaje implements IataqueElemental, IconPinchos {
     private final String elemento = "fuego";
     
     public Bowser(String nombre, int nivel, int vidaMax, int poder, int defensa, int suerte, int velocidad) {
