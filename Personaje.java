@@ -9,8 +9,7 @@ public class Personaje {
     protected int defensa;
     protected int suerte;
     protected int velocidad;
-    protected String elemento;
-    protected int [] pociones = new int[5]; 
+    protected String elemento; 
 
     public Personaje(String nombre, int nivel, int vidaMax, int poder, int defensa, int suerte, int velocidad){
         this.nombre = nombre;
