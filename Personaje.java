@@ -25,12 +25,16 @@ public class Personaje {
     }
 
     public void getStats() {
-    System.out.println("Nivel: " + this.nivel);
-    System.out.println("Vida: " + this.vida + "/" + this.vidaMax);
-    System.out.println("Poder: " + this.poder);
-    System.out.println("Defensa: " + this.defensa);
-    System.out.println("Suerte: " + this.suerte);
-    System.out.println("Velocidad: " + this.velocidad);
+        // System.out.println("Nivel: " + this.nivel);
+        // System.out.println("Vida: " + this.vida + "/" + this.vidaMax);
+        // System.out.println("Poder: " + this.poder);
+        // System.out.println("Defensa: " + this.defensa);
+        // System.out.println("Suerte: " + this.suerte);
+        // System.out.println("Velocidad: " + this.velocidad);
+
+        String hp = this.vida + "/" + this.vidaMax;
+        System.out.printf("|     HP: %-12sPoder: %-10dDefensa: %-8d   |\n", hp, this.poder, this.defensa);
+        System.out.printf("|     Suerte: %-8dVelocidad: %-24d  |\n", this.suerte, this.velocidad);
     }
 
     public int checkCrit(Personaje atacante, String mensaje) {
@@ -46,10 +50,10 @@ public class Personaje {
         if (esCritico) {
             // Ejemplo: El crítico aumenta el daño un 50% (1.5x)
             danoFinal = (int) (this.poder * 1.5);
-            System.out.println("\n" + "¡CRITICO! " + mensaje + " " + danoFinal + " de daño. (Daño base: " + this.poder + ")");
+            System.out.println("\n" +"¡CRITICO! " + mensaje + " " + danoFinal + " de daño. (Daño base: " + this.poder + ")");
             return danoFinal;
         } else {
-            System.out.println("\n"+ mensaje + " " + danoFinal + " de daño. (Daño base: " + this.poder + ")");
+            System.out.println("\n"+ mensaje + " " + danoFinal + " de daño.");
             return danoFinal;
         }
     }
