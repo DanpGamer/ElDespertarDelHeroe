@@ -8,8 +8,11 @@ public class Main {
     };
     static Bros jugador;
 
-    static Personaje oponente = new Personaje("Bowser", 10, 100, 10, 20, 20, 15, "fuego");
+    static Personaje oponente = new Boo();
     static Personaje personajeTurno;
+    static Personaje[] listaJefes = {
+        new Personaje("Bowser", 10, 100, 10, 20, 20, 15, "fuego")
+    };
 
     static int turno = 1;
     static int puntuacion;
@@ -30,11 +33,21 @@ public class Main {
         int selectMenu;
 
         do {
-            System.out.println("\n" + "[[EL DESPERTAR DEL HEROE]]" + "\n");
-            System.out.println("[1] Nueva Partida");
-            System.out.println("[2] Consultar Ranking");
-            System.out.println("[3] Ayuda y Reglas");
-            System.out.println("[0] Salir");
+            System.out.println("\n+==========================================================+");
+            System.out.println("|                                                          |");
+            System.out.println("|               *  EL DESPERTAR DEL HÉROE  *               |");
+            System.out.println("|               ~ Aventura RPG por Turnos ~                |");
+            System.out.println("|                                                          |");
+            System.out.println("+==========================================================+");
+            System.out.println("|                                                          |");
+            System.out.println("|    [1] Nueva Partida                                     |");
+            System.out.println("|    [2] Consultar Ranking                                 |");
+            System.out.println("|    [3] Ayuda y Reglas                                    |");
+            System.out.println("|                                                          |");
+            System.out.println("|    [0] Salir                                             |");
+            System.out.println("|                                                          |");
+            System.out.println("+----------------------------------------------------------+");
+            System.out.print("> Elige una opción: ");
 
             selectMenu = seleccionar();
 
@@ -63,14 +76,24 @@ public class Main {
         int selectMenu;
 
         do {
-            System.out.println("\n" + "[[SELECCIONA PERSONAJE]]");
+            System.out.println("\n+==========================================================+");
+            System.out.println("|                 SELECCIONA TU PERSONAJE                  |");
+            System.out.println("+==========================================================+");
 
             for (int i = 0; i < listaPersonajes.length; i++) {
-                System.out.println("\n" + "[" + (i + 1) + "] " + listaPersonajes[i].getNombre());
+                //System.out.println("\n" + "[" + (i + 1) + "] " + listaPersonajes[i].getNombre());
+                //listaPersonajes[i].getStats();
+
+                
+                String titulo = "[" + (i + 1) + "] " + listaPersonajes[i].getNombre().toUpperCase() + " (Nv. " + listaPersonajes[i].getNivel() + ")";
+                System.out.printf("| %-56s |\n", titulo);
                 listaPersonajes[i].getStats();
+                System.out.println("+----------------------------------------------------------+");
             }
 
-            System.out.println("[0] Volver");
+            System.out.println("| [0] Volver al Menú Principal                             |");
+            System.out.println("+----------------------------------------------------------+");
+            System.out.print("> Elige un personaje: ");
 
             selectMenu = seleccionar();
 
@@ -151,23 +174,51 @@ public class Main {
         }
     }
 
+    // IA: Método auxiliar para dibujar barras visuales de HP y PB
+    public static String generarBarra(int actual, int max, int longitud) {
+        if (max <= 0) max = 1;
+        int llenos = (int) Math.round(((double) actual / max) * longitud);
+        llenos = Math.max(0, Math.min(longitud, llenos)); // Evita valores fuera de rango
+        int vacios = longitud - llenos;
+
+        return "[" + "█".repeat(llenos) + "░".repeat(vacios) + "]";
+    }
+
     public static void mostrarEstado() {
-        System.out.println("=== " + jugador.getNombre().toUpperCase() + " ===");
-        System.out.println("Nivel: " + jugador.getNivel());
-        System.out.println("Vida: " + jugador.getVida() + "/" + jugador.getVidaMax());
-        System.out.println("=== " + oponente.getNombre().toUpperCase() + " ===");
-        System.out.println("Nivel: " + oponente.getNivel());
-        System.out.println("Vida: " + oponente.getVida() + "/" + oponente.getVidaMax());
+        // [MOSTRAR ESTADO INICIAL]
+        // System.out.println("=== " + jugador.getNombre().toUpperCase() + " ===");
+        // System.out.println("Nivel: " + jugador.getNivel());
+        // System.out.println("Vida: " + jugador.getVida() + "/" + jugador.getVidaMax());
+        // System.out.println("=== " + oponente.getNombre().toUpperCase() + " ===");
+        // System.out.println("Nivel: " + oponente.getNivel());
+        // System.out.println("Vida: " + oponente.getVida() + "/" + oponente.getVidaMax());
+        
+        //MENU CON AYUDA DE LA IA
+        String barraHpJugador = generarBarra(jugador.getVida(), jugador.getVidaMax(), 10);
+        String barraHpOponente = generarBarra(oponente.getVida(), oponente.getVidaMax(), 10);
+
+        String tituloJugador = jugador.getNombre().toUpperCase() + " (Nv. " + jugador.getNivel() + ")";
+        String tituloOponente = oponente.getNombre().toUpperCase() + " (Nv. " + oponente.getNivel() + ")";
+
+        System.out.println("\n+----------------------------------------------------------+");
+        System.out.printf("| %-24s VS   %-26s |\n", tituloJugador, tituloOponente);
+        System.out.printf("| HP: %s %3d/%-3d      HP: %s %3d/%-3d   |\n",
+                barraHpJugador, jugador.getVida(), jugador.getVidaMax(),
+                barraHpOponente, oponente.getVida(), oponente.getVidaMax());
+        System.out.println("+----------------------------------------------------------+");
+    
     }
 
     public static void turnoJugador(){
         int selectMenu;
         do {
-            System.out.println("[TURNO " + turno + ": " + jugador.getNombre() +"]");
-
-            System.out.println("[1] ATAQUE DE SALTO");
-            System.out.println("[2] ATAQUE MARTILLO");
-            System.out.println("[3] ATAQUE ELEMENTAL");
+            System.out.println("\n================= [ TURNO " + turno + ": " + jugador.getNombre().toUpperCase() + " ] =================");
+            System.out.println("  [1] Ataque de Salto");
+            System.out.println("  [2] Ataque Martillo");
+            System.out.println("  [3] Ataque Elemental");
+            System.out.println("  [4] Usar Poción (x" + /* jugador.getPociones() + */ " disponibles)");
+            System.out.println("------------------------------------------------------");
+            System.out.print("> Elige una acción: ");
             selectMenu = seleccionar();
         } while (selectMenu < 0 || selectMenu > 3); 
 
@@ -191,17 +242,19 @@ public class Main {
 
     public static void victoria() {
         puntuacion = puntuacion + 100;
+;
+        System.out.println("\n================= [ " + jugador.getNombre().toUpperCase() + " HA GANADO ] =================");
+        System.out.println("  Turnos: " + turno);
+        System.out.println("  Puntuación: " + puntuacion);
+        System.out.println("  [1] Siguiente Combate");
+        System.out.println("  [0] Volver al Menu Principal");
+        System.out.println("------------------------------------------------------");
+        System.out.print("> Elige una acción: ");
+
+
         turno = 0;
         jugador.reestablecer();
         oponente.reestablecer();
-
-        System.out.println("¡Has ganado!");
-
-        System.out.println("Puntuacion: " + puntuacion);
-
-        System.out.println("[1] Siguiente Combate");
-        System.out.println("[0] Volver al Menu Principal");
-
 
         int selectMenu = seleccionar();
         switch (selectMenu) {
