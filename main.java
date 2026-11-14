@@ -4,14 +4,16 @@ public class Main {
     static Bros[] listaPersonajes = {
         new Bros("Mario", 1, 100, 15, 10, 10, 15, "fuego"), 
         new Bros("Luigi", 1, 100, 10, 15, 10, 10, "electrica"),
-        new Bros("Wario", 1, 100, 20, 20, 10, 5, "fuego")
     };
     static Bros jugador;
 
     static Personaje oponente = new Boo();
     static Personaje personajeTurno;
     static Personaje[] listaJefes = {
-        new Personaje("Bowser", 10, 100, 10, 20, 20, 15)
+        new Goomba(),
+        new Pinchon(),
+        new Boo(),
+        new Bowser(),
     };
 
     static int turno = 1;
@@ -53,7 +55,8 @@ public class Main {
 
             switch (selectMenu) {
                 case 1:
-                    menuJuego();
+                    seleccionarJugador();                    
+                    empezarHistoria();
                     break;
                 case 2:
                     consultarRanking();
@@ -72,7 +75,7 @@ public class Main {
         } while (selectMenu < 0 || selectMenu > 3);
     }
 
-    public static void menuJuego() {
+    public static void seleccionarJugador() {
         int selectMenu;
 
         do {
@@ -107,22 +110,139 @@ public class Main {
                     jugador = listaPersonajes[selectMenu - 1];
             
                     System.out.println("Has seleccionado a " + jugador.getNombre());
-                    empezarCombate();
                 } 
                 // 3. Opción fuera de rango
                 else {
                     System.out.println("No has escogido una opción válida.");
                     }
-        } while (selectMenu < 0 || selectMenu > listaPersonajes.length);
+        } while (jugador == null);
     }
 
-    public static void empezarCombate(){
-        Boolean endGame = false;
-        System.out.println("\n" + jugador.getNombre() + " VS " + oponente.getNombre());
+    public static void empezarHistoria(){
+        // 1. Prólogo y Primer Combate (Goomba o Pinchón)
+        historiaPrologo();
+        oponente = new Goomba();
+        if (!empezarCombate()) { // Si pierde o abandona, termina la aventura
+            if (jugador.getVida() <= 0) historiaDerrota();
+            return;
+        }
 
+        // 2. Interludio I y Segundo Combate (Boo)
+        historiaBosque();
+        oponente = new Boo();
+        if (!empezarCombate()) {
+            if (jugador.getVida() <= 0) historiaDerrota();
+            return;
+        }
+
+        // 3. Interludio II y Combate Final (Bowser)
+        historiaCastilloBowser();
+        oponente = new Bowser();
+        if (!empezarCombate()) {
+            if (jugador.getVida() <= 0) historiaDerrota();
+            return;
+        }
+
+        // 4. Si supera los 3 combates, muestra el final
+        historiaVictoria();
+    }
+
+    public static void narrarEscena(String capitulo, String[] parrafos) {
+        System.out.println("\n+==========================================================+");
+        System.out.printf("| %-56s |\n", capitulo.toUpperCase());
+        System.out.println("+==========================================================+");
+        System.out.println("|                                                          |");
+
+        for (String linea : parrafos) {
+            System.out.printf("| %-56s |\n", linea);
+        }
+
+        System.out.println("|                                                          |");
+        System.out.println("+----------------------------------------------------------+");
+        System.out.print("  [ Pulsa ENTER para continuar... ]");
+        Scanner scannersc = new Scanner(System.in);
+        scannersc.nextLine(); // Espera a que el jugador pulse Enter
+        System.out.println();
+}
+
+    public static void historiaPrologo() {
+        String[] texto = {
+            "Era una mañana tranquila en el Reino Champiñón...",
+            "De pronto, el cielo se oscureció bajo la sombra de",
+            "una gigantesca fortaleza voladora.",
+            "",
+            "¡Bowser ha irrumpido en el castillo y ha secuestrado",
+            "a la Princesa Peach!",
+            "",
+            jugador.getNombre() + " ajusta su gorra y parte de inmediato hacia el",
+            "Sendero Champiñón para seguir el rastro del villano.",
+            "",
+            "¡Pero la vanguardia de Bowser bloquea el camino!"
+        };
+        narrarEscena("CAPÍTULO 1: EL RAPTO EN EL CASTILLO", texto);
+    } 
+    
+    public static void historiaBosque() {
+        String[] texto = {
+            "Con el camino despejado, " + jugador.getNombre() + " avanza sin descanso",
+            "hasta adentrarse en el Bosque Sombrío.",
+            "",
+            "La niebla cubre el sendero y los árboles parecen",
+            "observar cada paso. Un escalofrío recorre el aire...",
+            "",
+            "De entre las sombras se escucha una risa burlona.",
+            "¡Un espectro bloquea el paso hacia el volcán!"
+        };
+        narrarEscena("CAPÍTULO 2: SOMBRAS EN EL BOSQUE", texto);
+    }
+
+    public static void historiaCastilloBowser() {
+        String[] texto = {
+            "Tras dejar atrás la niebla, el calor se vuelve",
+            "insoportable. Las puertas del Castillo de Bowser se",
+            "alzan frente a " + jugador.getNombre() + ".",
+            "",
+            "Al cruzar el salón del trono, un rugido estremece",
+            "las columnas de piedra. Bowser aparece tras la jaula",
+            "de la Princesa Peach.",
+            "",
+            "BOWSER: '¡Gwahaha! ¡Llegaste demasiado tarde!'",
+            "¡Prepárate para el combate final!"
+        };
+        narrarEscena("CAPÍTULO 3: EL TRONO DE FUEGO", texto);
+    }    
+
+    public static void historiaVictoria() {
+        String[] texto = {
+            "¡Bowser cae derrotado y la fortaleza comienza a",
+            "temblar! " + jugador.getNombre() + " libera a la Princesa Peach.",
+            "",
+            "PEACH: '¡Gracias por salvarme una vez más!'",
+            "",
+            "La paz regresa al Reino Champiñón y el nombre del",
+            "héroe resuena en cada rincón del reino.",
+            "",
+            "*** ¡HAS COMPLETADO EL DESPERTAR DEL HÉROE! ***"
+        };
+        narrarEscena("EPÍLOGO: EL REGRESO DE LA PAZ", texto);
+    }
+
+    public static void historiaDerrota() {
+        String[] texto = {
+            jugador.getNombre() + " ha caído sin fuerzas en batalla...",
+            "La risa de Bowser resuena en la distancia mientras",
+            "la oscuridad cubre el Reino Champiñón.",
+            "",
+            "*** FIN DE LA PARTIDA - INTÉNTALO DE NUEVO ***"
+        };
+        narrarEscena("DERROTA: EL HÉROE HA CAÍDO", texto);
+    }
+    
+    public static boolean empezarCombate(){
+        Boolean victoria = null;
         Boolean esTurnoJugador = decidirTurno();
 
-        while (!endGame) {
+        while (victoria == null) {
             if (esTurnoJugador) {
                 personajeTurno = jugador;
                 mostrarEstado();
@@ -130,8 +250,7 @@ public class Main {
                 
                 if (oponente.getVida() <= 0) { //CONDICION DE VICTORIA SI OPONENTE VIDA ES IGUAL O MENOR A 0
                     System.out.println("¡" + oponente.getNombre() + " ha sido derrotado!");
-                    endGame = true;
-                    victoria();
+                    victoria = true;
                 }   
             }
                 else if (!esTurnoJugador){
@@ -142,13 +261,15 @@ public class Main {
                     if (jugador.getVida() <= 0) {
                         System.out.println("¡" + jugador.getNombre() + " ha sido derrotado!");
                         System.out.println("\n" + "¡Has perdido!");
-                        endGame = true;
+                        victoria = false;
                     }
                 }
             // 3. Alternar turno para la siguiente ronda (si es true pasa a false, y viceversa)
             esTurnoJugador = !esTurnoJugador;
             turno++;
         }
+
+        return victoria;
     }
 
     public static boolean decidirTurno(){
@@ -238,36 +359,6 @@ public class Main {
 
     public static void turnoOponente() {
         oponente.ataqueBasico(jugador);
-    }
-
-    public static void victoria() {
-        puntuacion = puntuacion + 100;
-;
-        System.out.println("\n================= [ " + jugador.getNombre().toUpperCase() + " HA GANADO ] =================");
-        System.out.println("  Turnos: " + turno);
-        System.out.println("  Puntuación: " + puntuacion);
-        System.out.println("  [1] Siguiente Combate");
-        System.out.println("  [0] Volver al Menu Principal");
-        System.out.println("------------------------------------------------------");
-        System.out.print("> Elige una acción: ");
-
-
-        turno = 0;
-        jugador.reestablecer();
-        oponente.reestablecer();
-
-        int selectMenu = seleccionar();
-        switch (selectMenu) {
-            case 1:
-                empezarCombate();
-                break;
-        
-            case 0:
-                menuPrincipal();
-                break;
-            default:
-                break;
-        }
     }
 
     public static void consultarRanking() {
