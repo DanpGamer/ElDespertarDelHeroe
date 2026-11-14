@@ -12,7 +12,7 @@ public class Personaje {
     protected String elemento;
     protected int [] pociones = new int[5]; 
 
-    public Personaje(String nombre, int nivel, int vidaMax, int poder, int defensa, int suerte, int velocidad, String elemento){
+    public Personaje(String nombre, int nivel, int vidaMax, int poder, int defensa, int suerte, int velocidad){
         this.nombre = nombre;
         this.nivel = 1;
         this.vidaMax = vidaMax;
@@ -21,7 +21,6 @@ public class Personaje {
         this.defensa = defensa;
         this.suerte = suerte;
         this.velocidad = velocidad;
-        this.elemento = elemento;
     }
 
     public void getStats() {
@@ -50,10 +49,10 @@ public class Personaje {
         if (esCritico) {
             // Ejemplo: El crítico aumenta el daño un 50% (1.5x)
             danoFinal = (int) (this.poder * 1.5);
-            System.out.println("\n" +"¡CRITICO! " + mensaje + " " + danoFinal + " de daño. (Daño base: " + this.poder + ")");
+            System.out.println("¡CRITICO! " + mensaje + " " + danoFinal + " de daño. (Daño base: " + this.poder + ")");
             return danoFinal;
         } else {
-            System.out.println("\n"+ mensaje + " " + danoFinal + " de daño.");
+            System.out.println(mensaje + " " + danoFinal + " de daño.");
             return danoFinal;
         }
     }
