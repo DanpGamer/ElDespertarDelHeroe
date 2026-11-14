@@ -2,10 +2,12 @@ import java.util.Scanner;
 
 public class Bros extends Personaje implements IataqueElemental{
     public int[] inventario = new int[3];
+    private String elemento;
     
 
     public Bros(String nombre, int nivel, int vidaMax, int poder, int defensa, int suerte, int velocidad, String elemento) {
-        super(nombre, nivel, vidaMax, poder, defensa, suerte, velocidad, elemento);
+        super(nombre, nivel, vidaMax, poder, defensa, suerte, velocidad);
+        this.elemento = elemento;
     }
 
     //ATAQUE BASICO SALTO (CUIDADO CON PINCHOS Y INOFENSIVO CON ENEMIGOS INVISIBLES)
@@ -55,14 +57,20 @@ public class Bros extends Personaje implements IataqueElemental{
         }
     }
 
+    @Override 
     public void ataqueElemental(Personaje oponente) {
-            int min = this.poder;
-            int max = this.poder /* * 2 */; 
-            int danoBase = (int) (Math.random() * (max - min + 1)) + min;  
-            int danoFinal = checkCrit(this, (this.nombre + " lanza bola de " + elemento));    
+        int min = this.poder;
+        int max = this.poder /* * 2 */; 
+        int danoBase = (int) (Math.random() * (max - min + 1)) + min;  
+        int danoFinal = checkCrit(this, (this.nombre + " lanza bola de " + elemento));    
 
-            
-            // Evitamos que la vida baje de 0
-            oponente.setVida(Math.max(0, oponente.getVida() - danoFinal));
-        }
+        
+        // Evitamos que la vida baje de 0
+        oponente.setVida(Math.max(0, oponente.getVida() - danoFinal));
+    }
+
+    @Override
+    public String getElemento() {
+        return this.elemento;
+    }
 }

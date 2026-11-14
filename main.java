@@ -11,7 +11,7 @@ public class Main {
     static Personaje oponente = new Boo();
     static Personaje personajeTurno;
     static Personaje[] listaJefes = {
-        new Personaje("Bowser", 10, 100, 10, 20, 20, 15, "fuego")
+        new Personaje("Bowser", 10, 100, 10, 20, 20, 15)
     };
 
     static int turno = 1;
