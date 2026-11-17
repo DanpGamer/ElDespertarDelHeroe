@@ -6,15 +6,15 @@ public class Bowser extends Personaje implements IataqueElemental, IconPinchos {
     }
 
     public Bowser() {
-        super("Bowser", 1, 100, 10, 10, 0, 10);
+        super("Bowser", 1, 80, 10, 10, 0, 10);
     }
 
     @Override 
     public void ataqueElemental(Personaje oponente) {
-            int danoFinal = checkCrit(this, (this.nombre + " lanza bola de " + this.elemento));    
+            int dano = checkCritFijo(this.poder / 2, this.poder, (this.nombre + " lanza bola de " + elemento));    
 
             // Evitamos que la vida baje de 0
-            oponente.setVida(Math.max(0, oponente.getVida() - danoFinal));
+            oponente.setVida(Math.max(0, oponente.getVida() - dano));
         }
 
     @Override
