@@ -4,6 +4,6 @@ public class Goomba extends Personaje {
     }
 
     public Goomba() {
-        super("Goomba", 1, 20, 10, 10, 0, 10);
+        super("Goomba", 1, 40, 10, 10, 0, 10);
     }
 }

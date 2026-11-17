@@ -4,6 +4,6 @@ public class Boo extends Personaje implements Ifantasma {
     }
 
     public Boo() {
-        super("Boo", 1, 40, 10, 10, 0, 50);
+        super("Boo", 1, 60, 10, 10, 0, 50);
     }
 }
