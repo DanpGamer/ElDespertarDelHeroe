@@ -35,20 +35,22 @@ public class Personaje {
         System.out.printf("|     Suerte: %-8dVelocidad: %-24d  |\n", this.suerte, this.velocidad);
     }
 
-    public int checkCrit(Personaje atacante, String mensaje) {
-        // 2. Comprobar crítico según la suerte (porcentaje)
+    public int checkCrit(int poder, String mensaje) {
+        // 2. Comprobar crítico según la suerte (porcentaje)    
         // Generamos un número de 1 a 100
         int tiradaPorcentaje = (int) (Math.random() * (100 - 1 + 1)) + 1; 
 
         // Si la tirada es menor o igual a la suerte, es un golpe crítico
         boolean esCritico = tiradaPorcentaje <= this.suerte;
 
-        int danoFinal = this.poder;
+        int min = poder / 2;
+        int max = poder; 
+        int danoFinal = (int) (Math.random() * (max - min + 1)) + min;
 
         if (esCritico) {
-            // Ejemplo: El crítico aumenta el daño un 50% (1.5x)
-            danoFinal = (int) (this.poder * 1.5);
-            System.out.println("¡CRITICO! " + mensaje + " " + danoFinal + " de daño. (Daño base: " + this.poder + ")");
+            // Ejemplo: El crítico garantiza 100% de daño
+            danoFinal = poder;
+            System.out.println("¡CRITICO! " + mensaje + " " + danoFinal + " de daño.");
             return danoFinal;
         } else {
             System.out.println(mensaje + " " + danoFinal + " de daño.");
@@ -56,8 +58,21 @@ public class Personaje {
         }
     }
 
+    public int checkCritFijo(int danoNormal, int danoCritico, String mensaje) {
+    int tiradaPorcentaje = (int) (Math.random() * 100) + 1;
+    boolean esCritico = tiradaPorcentaje <= this.suerte;
+
+    if (esCritico) {
+        System.out.println("¡CRÍTICO! " + mensaje + " " + danoCritico + " de daño.");
+        return danoCritico;
+    } else {
+        System.out.println(mensaje + " " + danoNormal + " de daño.");
+        return danoNormal;
+    }
+}
+
     public void ataqueBasico(Personaje oponente) {
-        int danoFinal = checkCrit(this, this.nombre + " inflige");
+        int danoFinal = checkCrit(this.poder, this.nombre + " inflige");
         oponente.setVida(Math.max(0, oponente.getVida() - danoFinal));
     }
 
