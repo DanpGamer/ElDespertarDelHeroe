@@ -25,3 +25,7 @@ replay_pid*
 
 # NOTAS
 VARIABLES.md
+
+# Archivos generados por java
+/bin/
+/target/
