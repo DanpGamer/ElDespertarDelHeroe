@@ -1,24 +1,18 @@
 import java.util.Scanner;
 
 public class Main {
-    static Bros[] listaPersonajes = {
-        new Bros("Mario", 1, 100, 15, 10, 10, 15, "fuego"), 
-        new Bros("Luigi", 1, 100, 10, 15, 10, 10, "electrica"),
-    };
     static Bros jugador;
-
-    static Personaje oponente = new Boo();
+    static Personaje oponente;
+    
     static Personaje personajeTurno;
-    static Personaje[] listaJefes = {
-        new Goomba(),
-        new Pinchon(),
-        new Boo(),
-        new Bowser(),
-    };
-
-    static int turno = 1;
     static int puntuacion;
-    static String[] ranking = new String[5];
+    static int turno = 1;
+    static String[] ranking = new String[10];
+
+    static Bros[] listaPersonajes = {
+        new Bros("Mario", 1, 100, 20, 10, 10, 15, "fuego"), 
+        new Bros("Luigi", 1, 100, 20, 15, 10, 10, "electrica"),
+    };
 
     public static void main (String[] args) {
         menuPrincipal();
@@ -26,8 +20,13 @@ public class Main {
 
     public static int seleccionar() {
         Scanner menuSc = new Scanner(System.in);
-        int seleccion = menuSc.nextInt();
 
+        while (!menuSc.hasNextInt()) {
+                System.out.print("(!) Entrada no válida.");
+                menuSc.next();
+        }
+
+        int seleccion = menuSc.nextInt();
         return seleccion;
     }
 
@@ -143,8 +142,13 @@ public class Main {
             return;
         }
 
+
         // 4. Si supera los 3 combates, muestra el final
         historiaVictoria();
+        puntuacion = puntuacion + jugador.getVida() + (jugador.getPocionesDisponibles() * 25);
+        ranking [0] = guardarPuntuacion();
+
+        menuPrincipal();
     }
 
     public static void narrarEscena(String capitulo, String[] parrafos) {
@@ -237,20 +241,22 @@ public class Main {
         };
         narrarEscena("DERROTA: EL HÉROE HA CAÍDO", texto);
     }
-    
+
+
+//LOGICA DE COMBATE //  //LOGICA DE COMBATE //  //LOGICA DE COMBATE //  //LOGICA DE COMBATE //  
     public static boolean empezarCombate(){
-        Boolean victoria = null;
+        Boolean esVictoria = null;
         Boolean esTurnoJugador = decidirTurno();
 
-        while (victoria == null) {
+        while (esVictoria == null) {
             if (esTurnoJugador) {
                 personajeTurno = jugador;
-                mostrarEstado();
                 turnoJugador();
                 
                 if (oponente.getVida() <= 0) { //CONDICION DE VICTORIA SI OPONENTE VIDA ES IGUAL O MENOR A 0
                     System.out.println("¡" + oponente.getNombre() + " ha sido derrotado!");
-                    victoria = true;
+                    puntuacion = puntuacion + 100;
+                    esVictoria = true;
                 }   
             }
                 else if (!esTurnoJugador){
@@ -261,15 +267,16 @@ public class Main {
                     if (jugador.getVida() <= 0) {
                         System.out.println("¡" + jugador.getNombre() + " ha sido derrotado!");
                         System.out.println("\n" + "¡Has perdido!");
-                        victoria = false;
+                        esVictoria = false;
                     }
                 }
             // 3. Alternar turno para la siguiente ronda (si es true pasa a false, y viceversa)
             esTurnoJugador = !esTurnoJugador;
             turno++;
         }
-
-        return victoria;
+        //DESPUES DEL COMBATE
+        turno = 1;
+        return esVictoria;
     }
 
     public static boolean decidirTurno(){
@@ -305,55 +312,72 @@ public class Main {
         return "[" + "█".repeat(llenos) + "░".repeat(vacios) + "]";
     }
 
-    public static void mostrarEstado() {
-        // [MOSTRAR ESTADO INICIAL]
-        // System.out.println("=== " + jugador.getNombre().toUpperCase() + " ===");
-        // System.out.println("Nivel: " + jugador.getNivel());
-        // System.out.println("Vida: " + jugador.getVida() + "/" + jugador.getVidaMax());
-        // System.out.println("=== " + oponente.getNombre().toUpperCase() + " ===");
-        // System.out.println("Nivel: " + oponente.getNivel());
-        // System.out.println("Vida: " + oponente.getVida() + "/" + oponente.getVidaMax());
-        
-        //MENU CON AYUDA DE LA IA
-        String barraHpJugador = generarBarra(jugador.getVida(), jugador.getVidaMax(), 10);
-        String barraHpOponente = generarBarra(oponente.getVida(), oponente.getVidaMax(), 10);
-
-        String tituloJugador = jugador.getNombre().toUpperCase() + " (Nv. " + jugador.getNivel() + ")";
-        String tituloOponente = oponente.getNombre().toUpperCase() + " (Nv. " + oponente.getNivel() + ")";
-
-        System.out.println("\n+----------------------------------------------------------+");
-        System.out.printf("| %-24s VS   %-26s |\n", tituloJugador, tituloOponente);
-        System.out.printf("| HP: %s %3d/%-3d      HP: %s %3d/%-3d   |\n",
-                barraHpJugador, jugador.getVida(), jugador.getVidaMax(),
-                barraHpOponente, oponente.getVida(), oponente.getVidaMax());
-        System.out.println("+----------------------------------------------------------+");
-    
-    }
-
     public static void turnoJugador(){
         int selectMenu;
+        boolean turnoTerminado = false;
+
         do {
+            // [MOSTRAR ESTADO INICIAL]
+            // System.out.println("=== " + jugador.getNombre().toUpperCase() + " ===");
+            // System.out.println("Nivel: " + jugador.getNivel());
+            // System.out.println("Vida: " + jugador.getVida() + "/" + jugador.getVidaMax());
+            // System.out.println("=== " + oponente.getNombre().toUpperCase() + " ===");
+            // System.out.println("Nivel: " + oponente.getNivel());
+            // System.out.println("Vida: " + oponente.getVida() + "/" + oponente.getVidaMax());
+            
+            //MENU CON AYUDA DE LA IA
+            String barraHpJugador = generarBarra(jugador.getVida(), jugador.getVidaMax(), 10);
+            String barraHpOponente = generarBarra(oponente.getVida(), oponente.getVidaMax(), 10);
+
+            String tituloJugador = jugador.getNombre().toUpperCase() + " (Nv. " + jugador.getNivel() + ")";
+            String tituloOponente = oponente.getNombre().toUpperCase() + " (Nv. " + oponente.getNivel() + ")";
+
+            System.out.println("\n+----------------------------------------------------------+");
+            System.out.printf("| %-24s VS   %-26s |\n", tituloJugador, tituloOponente);
+            System.out.printf("| HP: %s %3d/%-3d      HP: %s %3d/%-3d   |\n",
+                    barraHpJugador, jugador.getVida(), jugador.getVidaMax(),
+                    barraHpOponente, oponente.getVida(), oponente.getVidaMax());
+            System.out.println("+----------------------------------------------------------+");
+
             System.out.println("\n================= [ TURNO " + turno + ": " + jugador.getNombre().toUpperCase() + " ] =================");
             System.out.println("  [1] Ataque de Salto");
             System.out.println("  [2] Ataque Martillo");
             System.out.println("  [3] Ataque Elemental");
-            System.out.println("  [4] Usar Poción (x" + /* jugador.getPociones() + */ " disponibles)");
+            System.out.println("  [4] Inventario / Inventario / Pociones (" + jugador.getPocionesDisponibles() + "/3)");
             System.out.println("------------------------------------------------------");
             System.out.print("> Elige una acción: ");
             selectMenu = seleccionar();
-        } while (selectMenu < 0 || selectMenu > 3); 
 
-        if (selectMenu == 1) {
+            // ATAQUE DE SALTO
+            if (selectMenu == 1) {
             jugador.ataqueSalto(oponente);
-        }
+            turnoTerminado = true;
+            
+            //ATAQUE MARTILLO
+            } else if (selectMenu == 2) {
+                jugador.ataqueMartillo(oponente);
+                turnoTerminado = true;
 
-        if (selectMenu == 2) {
-            jugador.ataqueMartillo(oponente);
-        }
+            //ATAQUE ELEMENTAL
+            } else if (selectMenu == 3) {
+                jugador.ataqueElemental(oponente);
+                turnoTerminado = true;
+            
+            //INVENTARIO / POCIONES
+            } else if (selectMenu == 4) {
+                int slotElegido;
+                do {
+                    jugador.mostrarInventario();
+                    slotElegido = seleccionar();
+                } while (slotElegido < 0 || slotElegido > 3);
 
-        if (selectMenu == 3) {
-            jugador.ataqueElemental(oponente);
-        }
+                if (slotElegido != 0) {
+                    turnoTerminado = jugador.usarPocion(slotElegido);
+                }
+            } else {
+                System.out.println("(!) Opción no válida.");
+            }
+    } while (turnoTerminado == false); 
 
     }
 
@@ -390,17 +414,22 @@ public class Main {
             
     }
 
-    public static String guardarPuntuacion(int puntuacion){
+    public static String guardarPuntuacion(){
+        System.out.println("Introduce tu nombre para guardar puntuación.");
         Scanner nombreSc = new Scanner(System.in);
         String nombre = nombreSc.nextLine();
 
         return (nombre + puntuacion);
-        
     }
 
     public static void ayudaReglas() {
         int selectMenu;
         do {
+            String[] text = {
+                "",
+                ""
+            };
+
             System.out.println("REGLAS Y AYUDA");
 
             System.out.println();
