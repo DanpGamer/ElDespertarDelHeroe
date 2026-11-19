@@ -14,6 +14,7 @@ public class Main {
     static int[] puntuaciones = new int[tamanoTop];
 
     public static void main (String[] args) {
+        RankingXML.importar(nombres, puntuaciones);
         menuPrincipal();
     }
 
@@ -53,8 +54,10 @@ public class Main {
 
             switch (selectMenu) {
                 case 1:
-                    seleccionarJugador();                    
+                    seleccionarJugador();
+                    if (jugador != null) {
                     empezarHistoria();
+                    }
                     break;
                 case 2:
                     consultarRanking();
@@ -443,7 +446,7 @@ public class Main {
         }
 
         // Exportar automáticamente a XML pasando los dos arrays
-        ExportarRankingXML.exportar(nombres, puntuaciones);
+        RankingXML.exportar(nombres, puntuaciones);
     }
 
     public static void consultarRanking() {
@@ -467,20 +470,49 @@ public class Main {
     }
 
     public static void ayudaReglas() {
-        int selectMenu;
-        do {
+            int selectMenu;
             String[] text = {
+                "OBJETIVO DEL JUEGO:",
+                "Supera 3 combates seguidos (Goomba, Boo y Bowser) para",
+                "rescatar a la Princesa Peach. Si tu vida llega a 0 o",
+                "abandonas, la partida terminara.",
                 "",
-                ""
+                "ACCIONES EN COMBATE:",
+                "[1] Salto: Dano aleatorio. Cuidado con los pinchos.",
+                "[2] Martillo: Acierta (1-2) para critico; 0 si fallas.",
+                "    No hace efecto contra enemigos fantasma (Boo).",
+                "[3] Elemental: Dano base fijo con opcion de critico.",
+                "[4] Pociones: Tienes 3 (+25 HP, max 100). Mirar el",
+                "    inventario o pulsar [0] Volver no consume turno.",
+                "[5] Abandonar: Termina la partida y guarda tus puntos.",
+                "",
+                "SISTEMA DE PUNTUACION:",
+                "- +100 pts por cada enemigo derrotado.",
+                "- Bonus por victoria: +1 pt por cada HP restante.",
+                "- Bonus por ahorro: +25 pts por cada pocion sin usar.",
+                "- Las 10 mejores puntuaciones se guardan en el Ranking."
             };
 
-            System.out.println("REGLAS Y AYUDA");
+            do {
+                System.out.println("\n+==========================================================+");
+                System.out.println("|                      REGLAS Y AYUDA                      |");
+                System.out.println("+==========================================================+");
 
-            System.out.println();
+                for (String linea : text) {
+                    System.out.printf("| %-56s |\n", linea);
+                }
 
-            System.out.println("[0] Volver al Menu Principal");
-            selectMenu = seleccionar();
+                System.out.println("+----------------------------------------------------------+");
+                System.out.println("| [0] Volver al Menu Principal                             |");
+                System.out.println("+----------------------------------------------------------+");
+                System.out.print("> Elige una opcion: ");
 
-        } while (selectMenu != 0); 
-    }
+                selectMenu = seleccionar();
+
+                if (selectMenu != 0) {
+                    System.out.println("(!) Pulsa 0 para volver al menu principal.");
+                }
+
+            } while (selectMenu != 0);
+        }
 }
