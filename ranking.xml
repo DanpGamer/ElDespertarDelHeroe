@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="ranking.xsl"?><!DOCTYPE ranking SYSTEM "ranking.dtd">
+<ranking>
+    <jugador>
+        <nombre>Andres</nombre>
+        <puntuacion>200</puntuacion>
+    </jugador>
+    <jugador>
+        <nombre>Andres</nombre>
+        <puntuacion>0</puntuacion>
+    </jugador>
+</ranking>
