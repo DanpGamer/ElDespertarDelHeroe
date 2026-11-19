@@ -55,7 +55,7 @@ Proyecto intermodular de 1.º de Desarrollo de Aplicaciones Web (DAW) para los m
 1. Clona este repositorio o descarga el código fuente:
 ```bash
 git clone https://github.com/DanpGamer/ElDespertarDelHeroe
-cd TU-REPOSITORIO
+cd ElDespertarDelHeroe
 
 ```
 
