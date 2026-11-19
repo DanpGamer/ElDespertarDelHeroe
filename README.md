@@ -1,30 +1,90 @@
-# Despertar del Heroe
+# El Despertar del Héroe
 
-El héroe comenzará con 100 puntos de vida y tres pociones de 25 puntos de curación. Su ataque causará entre 10 
-y 20 puntos de daño, ambos incluidos. Los enemigos tendrán 40, 60 y 80 puntos de vida y causarán entre 5 y 15 
-puntos de daño. La vida nunca será negativa ni superará 100 tras curarse. Estos valores se definirán mediante 
-constantes. 
+Aventura RPG por turnos desarrollada en **Java** con persistencia de puntuaciones en **XML** (validado mediante **DTD**) y generación automática de clasificación web mediante **XSLT/XPath**, **HTML5** y **CSS3**.
 
-### Atributos de Personajes
-    nombre; (nombre del personaje)
-    nivel; (nivel de personaje)
-    vida; (vida actual)
-    vidaMax; (vida maxima del personaje)
-    poder; (ataque base)
-    defensa; (reducción de daño)
-    suerte; (será la probabilidad de un ataque critico (poder * 2))
-    velocidad; (determinará a quien le toca el primer turno )
+Proyecto intermodular de 1.º de Desarrollo de Aplicaciones Web (DAW) para los módulos de **Programación**, **Entornos de Desarrollo** y **Lenguaje de Marcas**.
 
-### Inventario con 3 espacios
-[0]pocion de +25HP
-[1]pocion de +25HP
-[2]pocion de +25HP
+---
 
-### Ataque con las siguientes habilidades disponibles [2]
-[0]salto (salto basico que RESTA 10HP y tiene una probabilidad en base al stat suerte de pegar critico (MULTIPLICACION POR 2))
-[1]martillo (sera un golpe con un prompt de escoger UN numero entre 1-3 y si escoges el correcto RESTA -20HP sino 0)
+## Características principales
 
-## Requisitos
-Java 21
+* **Selección de héroe:** Posibilidad de jugar con **Mario** (mayor velocidad, elemento fuego) o **Luigi** (mayor defensa, elemento eléctrica).
+* **Campaña en 3 capítulos:** Combates por turnos con orden basado en velocidad frente a **Goomba**, **Boo** (inmune a ataques físicos) y **Bowser** (con pinchos dorsales y ataque elemental).
+* **Sistema de combate e inventario:** Ataques de Salto, Martillo (con minijuego de golpe crítico) y Elemental, además de un inventario fijo de 3 pociones curativas (+25 HP).
+* **Ranking Top 10 persistente:** Ordenación automática de mayor a menor puntuación (con desempate por antigüedad) almacenada en `ranking.xml` y transformada en cada partida a `ranking.html`.
 
-## Como ejecutarlo
+### Sistema de puntuación
+* **+100 pts** por cada enemigo derrotado.
+* **+1 pt** por cada punto de vida (HP) restante al completar la aventura.
+* **+25 pts** por cada poción no consumida al finalizar con victoria.
+
+---
+
+## Estructura del proyecto
+
+```text
+├── Main.java                 # Flujo principal, menús, narrativa, combate y lógica de ranking
+├── Personaje.java            # Superclase base con atributos comunes y cálculo de críticos
+├── Bros.java                 # Subclase jugable (Mario/Luigi), ataques especiales e inventario
+├── Goomba.java               # Enemigo del Capítulo 1
+├── Boo.java                  # Enemigo espectral del Capítulo 2
+├── Bowser.java               # Jefe final del Capítulo 3
+├── IataqueElemental.java     # Interfaz para personajes con habilidades elementales
+├── IconPinchos.java          # Interfaz de marcado para enemigos con pinchos
+├── Ifantasma.java            # Interfaz de marcado para enemigos espectrales
+├── RankingXML.java           # Lectura (importar) y escritura DOM + XSLT (exportar)
+├── ranking.xml               # Base de datos XML con el historial de puntuaciones
+├── ranking.dtd               # Definición de tipo de documento para validar ranking.xml
+├── ranking.xsl               # Plantilla XSLT con rutas XPath para generar el HTML
+├── ranking.html              # Vista web del ranking actualizada automáticamente
+└── styles.css                # Hoja de estilos CSS para ranking.html
+
+```
+
+---
+
+## Requisitos y ejecución
+
+### Requisitos previos
+
+* **Java Development Kit (JDK):** Versión 17 o superior (compatible con JDK 11+).
+* Navegador web moderno para visualizar `ranking.html`.
+
+### Pasos para compilar y ejecutar
+
+1. Clona este repositorio o descarga el código fuente:
+```bash
+git clone https://github.com/DanpGamer/ElDespertarDelHeroe
+cd TU-REPOSITORIO
+
+```
+
+
+2. *(Opcional en Windows)* Activa la codificación UTF-8 en la consola para visualizar correctamente tildes y barras de vida:
+```bash
+chcp 65001
+
+```
+
+
+3. Compila todos los archivos fuente Java desde la carpeta raíz donde se encuentran `ranking.xml` y `ranking.xsl`:
+```bash
+javac -encoding UTF-8 *.java
+
+```
+
+
+4. Ejecuta el programa principal:
+```bash
+java -Dfile.encoding=UTF-8 Main
+
+```
+
+
+5. Tras finalizar una partida (por victoria, derrota o abandono), abre el archivo `ranking.html` en cualquier navegador para consultar la tabla actualizada.
+
+---
+
+## Autor
+
+* **Reinaldo Andrés García Villamediana** — 1.º DAW (XTART Formación Profesional, 2026)
