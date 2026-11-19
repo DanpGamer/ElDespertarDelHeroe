@@ -70,10 +70,11 @@ public class Main {
                     System.out.println("No has escogido una opcion valida");
                     break;
             }
-        } while (selectMenu < 0 || selectMenu > 3);
+        } while (selectMenu != 0);
     }
 
     public static void seleccionarJugador() {
+        jugador = null; // Reinicia el héroe en cada nueva partida
         Bros[] listaPersonajes = {
         new Bros("Mario", 1, 100, 20, 10, 10, 15, "fuego"), 
         new Bros("Luigi", 1, 100, 20, 15, 10, 10, "electrica"),
@@ -103,20 +104,20 @@ public class Main {
             selectMenu = seleccionar();
 
             if (selectMenu == 0) {
-            menuPrincipal();
+                return;
             } 
-                // 2. Validación dinámica: ¿La opción está entre 1 y la cantidad total de personajes?
-                else if (selectMenu >= 1 && selectMenu <= listaPersonajes.length) {
-            
-                    // Obtenemos el personaje seleccionado (opcion - 1 nos da el índice exacto en el array)
-                    jugador = listaPersonajes[selectMenu - 1];
-            
-                    System.out.println("Has seleccionado a " + jugador.getNombre());
-                } 
-                // 3. Opción fuera de rango
-                else {
-                    System.out.println("No has escogido una opción válida.");
-                    }
+            // 2. Validación dinámica: ¿La opción está entre 1 y la cantidad total de personajes?
+            else if (selectMenu >= 1 && selectMenu <= listaPersonajes.length) {
+        
+                // Obtenemos el personaje seleccionado (opcion - 1 nos da el índice exacto en el array)
+                jugador = listaPersonajes[selectMenu - 1];
+        
+                System.out.println("Has seleccionado a " + jugador.getNombre());
+            } 
+            // 3. Opción fuera de rango
+            else {
+                System.out.println("No has escogido una opción válida.");
+                }
         } while (jugador == null);
     }
 
@@ -148,9 +149,9 @@ public class Main {
         }
 
         // 4. Si supera los 3 combates, muestra el final
+        puntuacion = puntuacion + jugador.getVida() + (jugador.getPocionesDisponibles() * 25);
         historiaVictoria();
         guardarPuntuacion();
-        //ExportarRankingXML.exportar(nombres, puntuacion);
     }
 
     public static void derrota() {
@@ -387,7 +388,7 @@ public class Main {
                 esVictoria = false;
                 turnoTerminado = true;
                 guardarPuntuacion();
-                return ;
+                return;
             } else {
                 System.out.println("(!) Opción no válida.");
             }
@@ -400,8 +401,6 @@ public class Main {
     }
 
     public static void guardarPuntuacion(){
-        puntuacion = puntuacion + jugador.getVida() + (jugador.getPocionesDisponibles() * 25);
-
         Scanner nombreSc = new Scanner(System.in);
         String nombre;
 
@@ -443,7 +442,8 @@ public class Main {
             System.out.println("¡Puntuación guardada en la posición #" + (posicionInsertar + 1) + "!");
         }
 
-        menuPrincipal();
+        // Exportar automáticamente a XML pasando los dos arrays
+        ExportarRankingXML.exportar(nombres, puntuaciones);
     }
 
     public static void consultarRanking() {
@@ -464,10 +464,6 @@ public class Main {
             selectMenu = seleccionar();
 
         } while (selectMenu != 0);
-
-        if (selectMenu == 0) {
-            menuPrincipal();
-        }
     }
 
     public static void ayudaReglas() {
@@ -486,9 +482,5 @@ public class Main {
             selectMenu = seleccionar();
 
         } while (selectMenu != 0); 
-
-        if (selectMenu == 0) {
-            menuPrincipal();
-        }
     }
 }
