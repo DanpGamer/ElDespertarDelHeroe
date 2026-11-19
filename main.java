@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+
 public class Main {
     static Bros jugador;
     static Personaje oponente;
@@ -7,12 +8,10 @@ public class Main {
     static Personaje personajeTurno;
     static int puntuacion;
     static int turno = 1;
-    static String[] ranking = new String[10];
-
-    static Bros[] listaPersonajes = {
-        new Bros("Mario", 1, 100, 20, 10, 10, 15, "fuego"), 
-        new Bros("Luigi", 1, 100, 20, 15, 10, 10, "electrica"),
-    };
+    static Boolean esVictoria;
+    static int tamanoTop = 10;
+    static String[] nombres = new String[tamanoTop];
+    static int[] puntuaciones = new int[tamanoTop];
 
     public static void main (String[] args) {
         menuPrincipal();
@@ -75,8 +74,12 @@ public class Main {
     }
 
     public static void seleccionarJugador() {
-        int selectMenu;
+        Bros[] listaPersonajes = {
+        new Bros("Mario", 1, 100, 20, 10, 10, 15, "fuego"), 
+        new Bros("Luigi", 1, 100, 20, 15, 10, 10, "electrica"),
+        };
 
+        int selectMenu;
         do {
             System.out.println("\n+==========================================================+");
             System.out.println("|                 SELECCIONA TU PERSONAJE                  |");
@@ -118,11 +121,13 @@ public class Main {
     }
 
     public static void empezarHistoria(){
+        puntuacion = 0;
+
         // 1. Prólogo y Primer Combate (Goomba o Pinchón)
         historiaPrologo();
         oponente = new Goomba();
         if (!empezarCombate()) { // Si pierde o abandona, termina la aventura
-            if (jugador.getVida() <= 0) historiaDerrota();
+            if (jugador.getVida() <= 0) derrota();
             return;
         }
 
@@ -130,7 +135,7 @@ public class Main {
         historiaBosque();
         oponente = new Boo();
         if (!empezarCombate()) {
-            if (jugador.getVida() <= 0) historiaDerrota();
+            if (jugador.getVida() <= 0) derrota();
             return;
         }
 
@@ -138,17 +143,19 @@ public class Main {
         historiaCastilloBowser();
         oponente = new Bowser();
         if (!empezarCombate()) {
-            if (jugador.getVida() <= 0) historiaDerrota();
+            if (jugador.getVida() <= 0) derrota();
             return;
         }
 
-
         // 4. Si supera los 3 combates, muestra el final
         historiaVictoria();
-        puntuacion = puntuacion + jugador.getVida() + (jugador.getPocionesDisponibles() * 25);
-        ranking [0] = guardarPuntuacion();
+        guardarPuntuacion();
+        //ExportarRankingXML.exportar(nombres, puntuacion);
+    }
 
-        menuPrincipal();
+    public static void derrota() {
+        historiaDerrota();
+        guardarPuntuacion();
     }
 
     public static void narrarEscena(String capitulo, String[] parrafos) {
@@ -245,7 +252,7 @@ public class Main {
 
 //LOGICA DE COMBATE //  //LOGICA DE COMBATE //  //LOGICA DE COMBATE //  //LOGICA DE COMBATE //  
     public static boolean empezarCombate(){
-        Boolean esVictoria = null;
+        esVictoria = null;
         Boolean esTurnoJugador = decidirTurno();
 
         while (esVictoria == null) {
@@ -257,7 +264,7 @@ public class Main {
                     System.out.println("¡" + oponente.getNombre() + " ha sido derrotado!");
                     puntuacion = puntuacion + 100;
                     esVictoria = true;
-                }   
+                }
             }
                 else if (!esTurnoJugador){
                     personajeTurno = oponente;
@@ -344,6 +351,7 @@ public class Main {
             System.out.println("  [2] Ataque Martillo");
             System.out.println("  [3] Ataque Elemental");
             System.out.println("  [4] Inventario / Inventario / Pociones (" + jugador.getPocionesDisponibles() + "/3)");
+            System.out.println("  [5] Abandonar Partida");
             System.out.println("------------------------------------------------------");
             System.out.print("> Elige una acción: ");
             selectMenu = seleccionar();
@@ -374,6 +382,12 @@ public class Main {
                 if (slotElegido != 0) {
                     turnoTerminado = jugador.usarPocion(slotElegido);
                 }
+
+            } else if (selectMenu == 5) {
+                esVictoria = false;
+                turnoTerminado = true;
+                guardarPuntuacion();
+                return ;
             } else {
                 System.out.println("(!) Opción no válida.");
             }
@@ -385,41 +399,75 @@ public class Main {
         oponente.ataqueBasico(jugador);
     }
 
+    public static void guardarPuntuacion(){
+        puntuacion = puntuacion + jugador.getVida() + (jugador.getPocionesDisponibles() * 25);
+
+        Scanner nombreSc = new Scanner(System.in);
+        String nombre;
+
+        // Validar que el nombre no quede vacío
+        do {
+            System.out.print("Introduce tu nombre para guardar puntuación: ");
+            nombre = nombreSc.nextLine().trim();
+            if (nombre.isEmpty()) {
+                System.out.println("(!) El nombre no puede quedar vacío.");
+            }
+        } while (nombre.isEmpty());
+
+        // 1. Si el Top 5 está lleno y no supera al último puesto, no entra
+        if (nombres[nombres.length - 1] != null && puntuacion <= puntuaciones[puntuaciones.length - 1]) {
+            System.out.println("Tu puntuación (" + puntuacion + " pts) no entra en el Top "+tamanoTop+".");
+            return;
+        }
+
+        // 2. Buscar la posición exacta donde debe insertarse
+        int posicionInsertar = -1;
+        for (int i = 0; i < nombres.length; i++) {
+            // Al usar '>' estricto, en caso de empate se guarda DESPUÉS del registro más antiguo
+            if (nombres[i] == null || puntuacion > puntuaciones[i]) {
+                posicionInsertar = i;
+                break;
+            }
+        }
+
+        // 3. Desplazar hacia la derecha los puestos inferiores para hacer hueco
+        if (posicionInsertar != -1) {
+            for (int j = nombres.length - 1; j > posicionInsertar; j--) {
+                nombres[j] = nombres[j - 1];
+                puntuaciones[j] = puntuaciones[j - 1];
+            }
+
+            // 4. Insertar el nuevo registro en ambos arrays paralelos
+            nombres[posicionInsertar] = nombre;
+            puntuaciones[posicionInsertar] = puntuacion;
+            System.out.println("¡Puntuación guardada en la posición #" + (posicionInsertar + 1) + "!");
+        }
+
+        menuPrincipal();
+    }
+
     public static void consultarRanking() {
         int selectMenu;
 
         do {
             System.out.println("[[RANKING]]");
 
-            for (int i = 0; i < ranking.length; i++) {
-                String rankingGuardado = ranking[i];
-
-                if (rankingGuardado == null) {
-                    rankingGuardado = ("[" + (i + 1) + "] " + "No hay puntuacion guardada");
+            for (int i = 0; i < nombres.length; i++) {
+                if (nombres[i] == null) {
+                    System.out.println("[" + (i + 1) + "] No hay puntuacion guardada");
+                } else {
+                    System.out.println("[" + (i + 1) + "] " + nombres[i] + " - " + puntuaciones[i] + " pts");
                 }
-
-                System.out.println(rankingGuardado);
             }
 
             System.out.println("\n[0] Volver al Menu Principal");
-
             selectMenu = seleccionar();
 
-            if (selectMenu == 0) {
-                menuPrincipal();
-            }
+        } while (selectMenu != 0);
 
-        } while (selectMenu > 0 || selectMenu < 0); 
-
-            
-    }
-
-    public static String guardarPuntuacion(){
-        System.out.println("Introduce tu nombre para guardar puntuación.");
-        Scanner nombreSc = new Scanner(System.in);
-        String nombre = nombreSc.nextLine();
-
-        return (nombre + puntuacion);
+        if (selectMenu == 0) {
+            menuPrincipal();
+        }
     }
 
     public static void ayudaReglas() {
@@ -436,6 +484,11 @@ public class Main {
 
             System.out.println("[0] Volver al Menu Principal");
             selectMenu = seleccionar();
-        } while (selectMenu < 0 || selectMenu > 1); 
+
+        } while (selectMenu != 0); 
+
+        if (selectMenu == 0) {
+            menuPrincipal();
+        }
     }
 }
