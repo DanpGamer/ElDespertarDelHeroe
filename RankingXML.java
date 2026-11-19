@@ -11,8 +11,51 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
+import org.w3c.dom.NodeList;
 
-public class ExportarRankingXML {
+public class RankingXML {
+
+public static void importar(String[] nombres, int[] puntuaciones) {
+        try {
+            File archivo = new File("ranking.xml");
+
+            // Si es la primera vez que se juega y aún no existe el XML, salimos sin error
+            if (!archivo.exists()) {
+                return;
+            }
+
+            DocumentBuilderFactory fabrica = DocumentBuilderFactory.newInstance();
+            // IMPORTANTE: Aquí NO ponemos disallow-doctype-decl en true porque
+            // ranking.xml tiene la línea <!DOCTYPE ranking SYSTEM "ranking.dtd">
+            DocumentBuilder constructor = fabrica.newDocumentBuilder();
+            Document documento = constructor.parse(archivo);
+
+            NodeList lista = documento.getElementsByTagName("jugador");
+
+            // Recorremos los jugadores del XML sin pasarnos del tamaño del array (10)
+            int limite = Math.min(lista.getLength(), nombres.length);
+
+            for (int i = 0; i < limite; i++) {
+                Element jugador = (Element) lista.item(i);
+
+                String nombre = jugador
+                    .getElementsByTagName("nombre")
+                    .item(0)
+                    .getTextContent();
+
+                String puntosTexto = jugador
+                    .getElementsByTagName("puntuacion")
+                    .item(0)
+                    .getTextContent();
+
+                nombres[i] = nombre;
+                puntuaciones[i] = Integer.parseInt(puntosTexto);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al cargar el ranking previo: " + e.getMessage());
+        }
+    }
 
     public static void exportar(String[] nombres, int[] puntuaciones) {
         try {
