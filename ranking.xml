@@ -2,6 +2,10 @@
 <?xml-stylesheet type="text/xsl" href="ranking.xsl"?><!DOCTYPE ranking SYSTEM "ranking.dtd">
 <ranking>
     <jugador>
+        <nombre>Pochi</nombre>
+        <puntuacion>384</puntuacion>
+    </jugador>
+    <jugador>
         <nombre>Andres</nombre>
         <puntuacion>200</puntuacion>
     </jugador>
