@@ -87,6 +87,10 @@ public class Bros extends Personaje implements IataqueElemental{
             do {
                 System.out.println("Selecciona (1) o (2), si aciertas sera ataque 100% Critico, sino 0 daño");
                 Scanner select = new Scanner(System.in);
+                while (!select.hasNextInt()) {
+                    System.out.print("(!) Entrada no válida.");
+                    select.next();
+                }
                 eleccion = select.nextInt();
 
                 if (eleccion < 1 || eleccion > 2) {
