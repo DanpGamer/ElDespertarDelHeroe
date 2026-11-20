@@ -79,8 +79,8 @@ public class Main {
     public static void seleccionarJugador() {
         jugador = null; // Reinicia el héroe en cada nueva partida
         Bros[] listaPersonajes = {
-        new Bros("Mario", 1, 100, 20, 10, 10, 15, "fuego"), 
-        new Bros("Luigi", 1, 100, 20, 15, 10, 10, "electrica"),
+        new Bros("Mario", 1, 100, 20, 10, 10, 20, "fuego"), 
+        new Bros("Luigi", 1, 100, 20, 10, 20, 10, "electrica"),
         };
 
         int selectMenu;
